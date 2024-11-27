@@ -14,8 +14,9 @@ for(package in required_packages) {
 }
 
 # Leer el archivo
-file_path <- "C:/Users/nestor.gonzalez/Documents/GitHub/proyecto2_mineria_datos/20190718224829QlKHEHYjsnuXyJ0R0nU16Fo9SHmLER0z.sav"
+file_path <- "c:/Users/diego/Desktop/II/paraP/20190718224829QlKHEHYjsnuXyJ0R0nU16Fo9SHmLER0z.sav"
 
+"C:/Users/nestor.gonzalez/Documents/GitHub/proyecto2_mineria_datos/20190718224829QlKHEHYjsnuXyJ0R0nU16Fo9SHmLER0z.sav"
 if (file.exists(file_path)) {
   # Leer datos y realizar limpieza inicial
   multas <- read_sav(file_path)
