@@ -39,15 +39,8 @@ names(multas)
 ```
 
 
-```{r}
-
-
-```
-
 
 ```{r}
-# Limpiar la consola
-cat("\014")
 
 # Configurar el espejo de CRAN
 options(repos = c(CRAN = "https://cran.r-project.org"))
@@ -61,17 +54,15 @@ for (package in required_packages) {
   }
 }
 
-
-
 if (file.exists(file_path)) {
   # Leer datos y realizar limpieza inicial
   
   multas <- as.data.frame(multas)
   
-  # Normalizar nombres de columnas (manejo de caracteres especiales)
+  # Normalizo nombres de columnas (manejo de caracteres especiales)
   colnames(multas) <- make.names(colnames(multas))
   
-  # Verificar las columnas disponibles
+  # Verifico las columnas disponibles
   print("Columnas disponibles en el DataFrame:")
   print(colnames(multas))
   
@@ -274,7 +265,8 @@ arbol_1 <- data.frame(
 
 ```{r}
 
-
+library(rpart)
+library(rpart.plot)
 # Entrenamiento del modelo
 arbol <- rpart(FALTA ~ DEPARTAMENTO + SEXO + MES + ESTADO_EBRIEDAD,
                data = multas, method = "class")
@@ -417,6 +409,8 @@ if (all(c("ESCOLARIDAD", "EDAD", "EST_CONYUGAL", "AREA_GEOGRAFICA", "ETNIA") %in
 
 
 ```{r}
+library(randomForest)
+
 # Predecir el estado de ebriedad
 set.seed(123) # Para asegurar la replicabilidad
 
@@ -442,6 +436,7 @@ head(predicciones_rf_ebriedad)
 ```
 
 ```{r}
+library(randomForest)
 # Predecir el área geográfica
 set.seed(456) # Para asegurar la replicabilidad
 
@@ -469,7 +464,7 @@ head(predicciones_rf_area_geo)
 
 
 ```{r}
-#####Primero, utilizamos el modelo de Random Forest para predecir el estado de ebriedad (ESTADO_EBRIEDAD), basados en variables como sexo, edad, estado civil, mes y área geográfica. Después, se prueba dos escenarios de muestra con valores manuales:
+library(randomForest)
 
 # Entrenamiento del modelo Random Forest para Estado de Ebriedad
 set.seed(123)
@@ -489,6 +484,7 @@ print(importance(modelo_rf_ebriedad))
 
 
 ```{r}
+library(randomForest)
 # se Verifica los niveles de las variables categóricas en los datos de entrenamiento
 levels(multas$SEXO)           # Niveles de SEXO en los datos de entrenamiento
 levels(multas$EST_CONYUGAL)   # Niveles de EST_CONYUGAL en los datos de entrenamiento
