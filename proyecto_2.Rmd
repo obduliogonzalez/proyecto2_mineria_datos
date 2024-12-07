@@ -61,12 +61,11 @@ for (package in required_packages) {
   }
 }
 
-# Leer el archivo
-#file_path <- "C:/Users/nestor.gonzalez/Documents/GitHub/proyecto2_mineria_datos/20190718224829QlKHEHYjsnuXyJ0R0nU16Fo9SHmLER0z.sav"
+
 
 if (file.exists(file_path)) {
   # Leer datos y realizar limpieza inicial
-  #multas <- read_sav(file_path)
+  
   multas <- as.data.frame(multas)
   
   # Normalizar nombres de columnas (manejo de caracteres especiales)
@@ -138,8 +137,6 @@ print(g4)
 
 
 ```{r}
-# Limpiar consola
-cat("\014")
 
 # Configurar el espejo de CRAN
 options(repos = c(CRAN = "https://cran.r-project.org"))
@@ -153,9 +150,6 @@ for (package in required_packages) {
   }
 }
 
-
-#multas <- read_sav(file_path)
-#multas <- as.data.frame(multas)
 
 # Seleccionar una muestra de 3,000 datos
 set.seed(123) # Para replicabilidad
@@ -300,7 +294,7 @@ result <- predict(arbol, arbol_1, type = "class")
 
 
 
-# Mostrar el resultado
+# Muestra el resultado
 print(result)
 ```
 
@@ -313,7 +307,7 @@ print(result)
 # **Caso 2: Predicción de Área Geográfica**
 if (all(c("AREA_GEOGRAFICA", "EDAD", "ETNIA", "ESCOLARIDAD", "EST_CONYUGAL") %in% colnames(multas))) {
   
-  # Entrenar el árbol para el Caso 2
+  # Entrenando el árbol para el Caso 2
   modelo_2 <- entrenar_arbol(
     data = multas,
     target = "AREA_GEOGRAFICA",
@@ -321,7 +315,7 @@ if (all(c("AREA_GEOGRAFICA", "EDAD", "ETNIA", "ESCOLARIDAD", "EST_CONYUGAL") %in
     caso = 2
   )
   
-  # Crear un caso manual para validación
+  # se crea un caso manual para validación
   caso_manual_2 <- data.frame(
     EDAD = c(30),           # Edad manual
     ETNIA = c(1),           # Etnia (cambia según tu codificación)
@@ -329,10 +323,10 @@ if (all(c("AREA_GEOGRAFICA", "EDAD", "ETNIA", "ESCOLARIDAD", "EST_CONYUGAL") %in
     EST_CONYUGAL = c(2)     # Estado conyugal (cambia según tu codificación)
   )
   
-  # Realizar la predicción con el modelo entrenado
+  # se realiza la predicción con el modelo entrenado
   resultado_2 <- predict(modelo_2, caso_manual_2, type = "class")
   
-  # Mostrar el resultado de la predicción
+  # Muestra el resultado de la predicción
   print("Resultado de la predicción para el Caso 2:")
   print(resultado_2)
   
@@ -346,7 +340,7 @@ if (all(c("AREA_GEOGRAFICA", "EDAD", "ETNIA", "ESCOLARIDAD", "EST_CONYUGAL") %in
 ```{r}
 if (all(c("COND_ALFABETISMO", "SEXO", "EDAD", "EST_CONYUGAL", "AREA_GEOGRAFICA") %in% colnames(multas))) {
   
-  # Asegurar que las variables categóricas sean factores
+  # Se asegura que las variables categóricas sean factores
   multas$SEXO <- as.factor(multas$SEXO)
   multas$AREA_GEOGRAFICA <- as.factor(multas$AREA_GEOGRAFICA)
   multas$COND_ALFABETISMO <- as.factor(multas$COND_ALFABETISMO)
@@ -360,18 +354,18 @@ if (all(c("COND_ALFABETISMO", "SEXO", "EDAD", "EST_CONYUGAL", "AREA_GEOGRAFICA")
     caso = 3
   )
   
-  # Crear un caso manual para validación asegurando que los tipos sean correctos
+  # se Crea un caso manual para validación asegurando que los tipos sean correctos
   caso_manual_3 <- data.frame(
-    SEXO = as.factor(c(1)),               # Asegurarse de que sea un factor
+    SEXO = as.factor(c(1)),               # Asegura de que sea un factor
     EDAD = c(40),                         # Numérico como durante el entrenamiento
     EST_CONYUGAL = as.factor(c(3)),       # Factor
     AREA_GEOGRAFICA = as.factor(c(2))     # Factor
   )
   
-  # Realizar la predicción con el modelo entrenado
+  # Realiza la predicción con el modelo entrenado
   resultado_3 <- predict(modelo_3, caso_manual_3, type = "class")
   
-  # Mostrar el resultado de la predicción
+  # Muestra el resultado de la predicción
   print("Resultado de la predicción para el Caso 3:")
   print(resultado_3)
   
@@ -400,7 +394,7 @@ if (all(c("ESCOLARIDAD", "EDAD", "EST_CONYUGAL", "AREA_GEOGRAFICA", "ETNIA") %in
     caso = 4
   )
   
-  # Crear un caso manual para validación asegurando que los tipos sean correctos
+  # se crea un caso manual para la validación asegurando que los tipos sean correctos
   caso_manual_4 <- data.frame(
     EDAD = c(25),                         # Numérico como durante el entrenamiento
     EST_CONYUGAL = as.factor(c(3)),       # Factor
@@ -408,10 +402,10 @@ if (all(c("ESCOLARIDAD", "EDAD", "EST_CONYUGAL", "AREA_GEOGRAFICA", "ETNIA") %in
     ETNIA = as.factor(c(1))               # Factor
   )
   
-  # Realizar la predicción con el modelo entrenado
+  # Realiza la predicción con el modelo entrenado
   resultado_4 <- predict(modelo_4, caso_manual_4, type = "class")
   
-  # Mostrar el resultado de la predicción
+  # Muestra el resultado de la predicción
   print("Resultado de la predicción para el Caso 4:")
   print(resultado_4)
   
@@ -422,5 +416,149 @@ if (all(c("ESCOLARIDAD", "EDAD", "EST_CONYUGAL", "AREA_GEOGRAFICA", "ETNIA") %in
 ```
 
 
+```{r}
+# Predecir el estado de ebriedad
+set.seed(123) # Para asegurar la replicabilidad
 
+# Entrenar el modelo de Random Forest
+modelo_rf_ebriedad <- randomForest(ESTADO_EBRIEDAD ~ SEXO + EDAD + EST_CONYUGAL + MES + AREA_GEOGRAFICA,
+                                   data = multas, 
+                                   ntree = 500,  # Número de árboles en el bosque
+                                   mtry = 3,     # Número de variables a considerar en cada división
+                                   importance = TRUE)
+
+# Resumen del modelo
+print(modelo_rf_ebriedad)
+
+# Muestra la importancia de las variables
+print(importance(modelo_rf_ebriedad))
+
+# Realiza predicciones
+predicciones_rf_ebriedad <- predict(modelo_rf_ebriedad, multas)
+
+# Ver las primeras predicciones
+head(predicciones_rf_ebriedad)
+
+```
+
+```{r}
+# Predecir el área geográfica
+set.seed(456) # Para asegurar la replicabilidad
+
+# Entrenamos el modelo de Random Forest
+modelo_rf_area_geo <- randomForest(AREA_GEOGRAFICA ~ EDAD + ETNIA + ESCOLARIDAD + EST_CONYUGAL,
+                                   data = multas, 
+                                   ntree = 500,  # Número de árboles en el bosque
+                                   mtry = 3,     # Número de variables a considerar en cada división
+                                   importance = TRUE)
+
+# Resumen del modelo
+print(modelo_rf_area_geo)
+
+# Mostrar la importancia de las variables
+print(importance(modelo_rf_area_geo))
+
+# Realiza predicciones
+predicciones_rf_area_geo <- predict(modelo_rf_area_geo, multas)
+
+# Ver las primeras predicciones
+head(predicciones_rf_area_geo)
+
+```
+
+
+
+```{r}
+#####Primero, utilizamos el modelo de Random Forest para predecir el estado de ebriedad (ESTADO_EBRIEDAD), basados en variables como sexo, edad, estado civil, mes y área geográfica. Después, se prueba dos escenarios de muestra con valores manuales:
+
+# Entrenamiento del modelo Random Forest para Estado de Ebriedad
+set.seed(123)
+modelo_rf_ebriedad <- randomForest(ESTADO_EBRIEDAD ~ SEXO + EDAD + EST_CONYUGAL + MES + AREA_GEOGRAFICA,
+                                   data = multas, 
+                                   ntree = 500, 
+                                   mtry = 3, 
+                                   importance = TRUE)
+
+# Resumen del modelo
+print(modelo_rf_ebriedad)
+
+# Muestra la importancia de las variables
+print(importance(modelo_rf_ebriedad))
+
+```
+
+
+```{r}
+# se Verifica los niveles de las variables categóricas en los datos de entrenamiento
+levels(multas$SEXO)           # Niveles de SEXO en los datos de entrenamiento
+levels(multas$EST_CONYUGAL)   # Niveles de EST_CONYUGAL en los datos de entrenamiento
+levels(multas$MES)            # Niveles de MES en los datos de entrenamiento
+levels(multas$AREA_GEOGRAFICA) # Niveles de AREA_GEOGRAFICA en los datos de entrenamiento
+
+# Crea el escenario de prueba (asegúra de que las variables coincidan con los tipos del modelo entrenado)
+escenario_1 <- data.frame(
+  SEXO = factor(2, levels = levels(multas$SEXO)),  # Asegura de que SEXO tenga los mismos niveles que en los datos de entrenamiento
+  EDAD = 21,
+  EST_CONYUGAL = factor(2, levels = levels(multas$EST_CONYUGAL)),  # Asegura de que EST_CONYUGAL tenga los mismos niveles que en los datos de entrenamiento
+  MES = factor(6, levels = levels(multas$MES)),  # Asegurarte de que MES tenga los mismos niveles que en los datos de entrenamiento
+  AREA_GEOGRAFICA = factor(1, levels = levels(multas$AREA_GEOGRAFICA))  # Asegura de que AREA_GEOGRAFICA tenga los mismos niveles que en los datos de entrenamiento
+)
+
+# Realiza la predicción
+prediccion_escenario_1 <- predict(modelo_rf_ebriedad, escenario_1)
+print(prediccion_escenario_1)
+
+
+```
+```{r}
+# Asegura de que los factores coinciden exactamente con los niveles observados en los datos
+escenario_1 <- data.frame(
+  SEXO = factor(2, levels = levels(multas$SEXO)),  # Mujer
+  EDAD = 21,
+  EST_CONYUGAL = factor(2, levels = levels(multas$EST_CONYUGAL)),  # Soltera
+  MES = factor(6, levels = levels(multas$MES)),  # Primer semestre (Junio)
+  AREA_GEOGRAFICA = factor(1, levels = levels(multas$AREA_GEOGRAFICA))  # Área Geográfica 1
+)
+
+# Verifica el contenido de los factores antes de hacer la predicción
+print(escenario_1)
+
+# Realiza la predicción para el escenario 1
+prediccion_escenario_1 <- predict(modelo_rf_ebriedad, escenario_1)
+print("Predicción Escenario 1:")
+print(prediccion_escenario_1)
+
+# Crea el escenario 2: Mujer de 27 años, primer semestre, llevando el curso por cuarta vez
+escenario_2 <- data.frame(
+  SEXO = factor(2, levels = levels(multas$SEXO)),  # Mujer
+  EDAD = 27,
+  EST_CONYUGAL = factor(2, levels = levels(multas$EST_CONYUGAL)),  # Soltera
+  MES = factor(6, levels = levels(multas$MES)),  # Primer semestre
+  AREA_GEOGRAFICA = factor(2, levels = levels(multas$AREA_GEOGRAFICA))  # Área Geográfica 2
+)
+
+# Realiza la predicción para el escenario 2
+prediccion_escenario_2 <- predict(modelo_rf_ebriedad, escenario_2)
+print("Predicción Escenario 2:")
+print(prediccion_escenario_2)
+
+# Crea el escenario 3: Hombre de 30 años, segundo semestre, llevando el curso por tercera vez
+escenario_3 <- data.frame(
+  SEXO = factor(1, levels = levels(multas$SEXO)),  # Hombre
+  EDAD = 30,
+  EST_CONYUGAL = factor(3, levels = levels(multas$EST_CONYUGAL)),  # Casado
+  MES = factor(7, levels = levels(multas$MES)),  # Segundo semestre
+  AREA_GEOGRAFICA = factor(3, levels = levels(multas$AREA_GEOGRAFICA))  # Área Geográfica 3
+)
+
+# Verifica el contenido del escenario 3 antes de hacer la predicción
+print(escenario_3)
+
+# Realiza la predicción para el escenario 3
+prediccion_escenario_3 <- predict(modelo_rf_ebriedad, escenario_3)
+print("Predicción Escenario 3:")
+print(prediccion_escenario_3)
+
+
+```
 
